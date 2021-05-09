@@ -11,19 +11,13 @@ using System.Web.Mvc;
 
 namespace MvcProjeKampi.Controllers
 {
-    public class CategoryController : Controller
+    public class AdminCategoryController : Controller
     {
-        // GET: Caregory
         CategoryManager cm = new CategoryManager(new EfCategoryDal());
+        // GET: AdminCategory
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult GetCategoryList()
-        {
             var categoryValues = cm.GetList();
-
             return View(categoryValues);
         }
 
@@ -38,10 +32,11 @@ namespace MvcProjeKampi.Controllers
         {
             CategoryValidator categoryValidator = new CategoryValidator();
             ValidationResult results = categoryValidator.Validate(p);
+
             if (results.IsValid)
             {
                 cm.CategoryAdd(p);
-                return RedirectToAction("GetCategoryList");
+                return RedirectToAction("Index");
             }
             else 
             {
@@ -50,7 +45,7 @@ namespace MvcProjeKampi.Controllers
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
             }
-            return View();
+            return View(p);
         }
     }
 }
